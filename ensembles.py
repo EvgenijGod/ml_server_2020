@@ -4,7 +4,7 @@ from scipy.optimize import minimize_scalar
 import time
 
 class RandomForestMSE:
-    def __init__(self, n_estimators, max_depth=None, feature_subsample_size=None,
+    def __init__(self, n_estimators = 20, max_depth=None, feature_subsample_size=None,
                  **trees_parameters):
         """
         n_estimators : int
