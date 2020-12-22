@@ -117,7 +117,7 @@ class GradientBoostingMSE:
             c = minimize_scalar(lambda coef: np.mean((coef * pred - target) ** 2)).x
             self.coefs.append(c * self.learning_rate)
             self.trees_ensemble.append(algo)
-            prev_res += c * self.learning_rate * target
+            prev_res[sample] += c * self.learning_rate * target
 
     def predict(self, X, y = None, versbose=False):
         """
