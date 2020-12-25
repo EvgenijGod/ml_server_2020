@@ -23,7 +23,8 @@ class GB_Form(Form):
     feature_subsample_size = IntegerField('feature_subsample_size',
         [validators.DataRequired(), num_validator])
 
-    trees_parameters = StringField('trees_parameters')
+    trees_parameters = StringField('trees_parameters',
+        [validators.DataRequired()])
 
     train_dataset = FileField('Choose the file for training',
                               validators=[#FileRequired('No File'),
@@ -43,7 +44,8 @@ class RF_Form(Form):
     feature_subsample_size = IntegerField('feature_subsample_size',
         [validators.DataRequired(), num_validator])
 
-    trees_parameters = StringField('trees_parameters')
+    trees_parameters = StringField('trees_parameters',
+        [validators.DataRequired()])
 
     train_dataset = FileField('Choose the file for training',
                               validators=[#FileRequired('No File'),

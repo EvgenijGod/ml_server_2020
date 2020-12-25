@@ -3,8 +3,13 @@ from sklearn.tree import DecisionTreeRegressor
 from scipy.optimize import minimize_scalar
 import time
 
+
+def rmse(y_true, y_pred):
+    return np.sqrt(np.mean((y_true - y_pred) ** 2))
+
+
 class RandomForestMSE:
-    def __init__(self, n_estimators = 20, max_depth=None, feature_subsample_size=None,
+    def __init__(self, n_estimators=20, max_depth=None, feature_subsample_size=None,
                  **trees_parameters):
         """
         n_estimators : int
@@ -21,7 +26,7 @@ class RandomForestMSE:
         self.feature_subsample_size = feature_subsample_size
         self.trees_parameters = trees_parameters
 
-    def fit(self, X, y):
+    def fit(self, X, y, verbose=False, X_val=None, y_val=None):
         """
         X : numpy ndarray
             Array of size n_objects, n_features
@@ -35,6 +40,9 @@ class RandomForestMSE:
         inds = np.arange(X.shape[0])
         self.trees_ensemble = []
 
+        x_res = []
+        y_res = []
+
         for i in range(self.n_estimators):
             algo = DecisionTreeRegressor(max_features=self.feature_subsample_size,
                                          max_depth=self.max_depth,
@@ -43,6 +51,15 @@ class RandomForestMSE:
             algo.fit(X[sample], y[sample])
 
             self.trees_ensemble.append(algo)
+
+            if verbose:
+                x_res.append(i)
+                pred = self.predict(X_val)
+
+                y_res.append(rmse(y_val, pred))
+
+        if verbose:
+            return x_res, y_res
 
     def predict(self, X):
         """
@@ -119,7 +136,7 @@ class GradientBoostingMSE:
             self.trees_ensemble.append(algo)
             prev_res[sample] += c * self.learning_rate * target
 
-    def predict(self, X, y = None, versbose=False):
+    def predict(self, X, y=None, versbose=False):
         """
         X : numpy ndarray
             Array of size n_objects, n_features
@@ -146,11 +163,10 @@ class GradientBoostingMSE:
             cur_pred = algo.predict(X)
             preds.append(cur_pred)
             i += 1
-            my_pred = np.sum(np.array(preds) * np.array(self.coefs)[:i, np.newaxis], axis = 0)
+            my_pred = np.sum(np.array(preds) * np.array(self.coefs)[:i, np.newaxis], axis=0)
             end = time.time()
             if versbose:
                 self.history['rmse'].append(np.sqrt(np.mean((my_pred - y) ** 2)))
                 self.history['time'].append(end - begin)
 
-        return np.sum(np.array(preds) * np.array(self.coefs)[:, np.newaxis], axis = 0)
-
+        return np.sum(np.array(preds) * np.array(self.coefs)[:, np.newaxis], axis=0)

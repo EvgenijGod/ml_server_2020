@@ -1,5 +1,4 @@
 numpy
-pandas
 scipy
 scikit-learn
 sklearn
@@ -8,4 +7,3 @@ wtforms
 flask_wtf
 flask_bootstrap
 email_validator
-plotly
