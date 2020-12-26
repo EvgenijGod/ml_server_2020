@@ -1,10 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <h1>Models page</h1>
+    <style>
+#rcorners1 {
+  border-radius: 25px;
+  background: #73AD21;
+  padding: 20px;
+  width: 200px;
+  height: 150px;
+}
+
+#rcorners2 {
+  border-radius: 25px;
+  border: 2px solid #73AD21;
+  padding: 20px;
+  width: 60%;
+  height: 100%;
+}
+.graph-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  align: "left"
+}
+
+.graph {
+  width: 10%;
+}
+    </style>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
 </head>
 <body>
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content %}
+<div style="width:100%;">
+    <div style="float:left; width: 50%">
 
+        <h1>Choose model</h1>
+
+        <form class="form-inline" method="POST" action="{{ url_for('goto_models_page') }}">
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">Please select model</span>
+                    <select name="comp_select" class="selectpicker form-control">
+                        {% for o in option_list %}
+                        <option value="{{ o }}">{{ o }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default">Go</button>
+            </div>
+        </form>
+        <h1> {{chosen}}</h1>
+        <hr>
+        {{ wtf.quick_form(form) }}
+        <hr>
+    </div>
+    <div style="float:right;width: 40%">
+        <h1>Model parameters</h1>
+
+        <p>List of model`s parameters</p>
+
+        <div id="rcorners2">
+            <p>
+                {% for name in params %}
+            <p><b>{{ name }}</b> = {{ params[name] }}</p>
+            {% endfor %}
+            </p>
+        </div>
+
+        <p>MSE after each iteration:</p>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-3">
+                    <label> MSE of algo after each iteration.</label>
+                </div>
+                <div class="graph-container">
+                    <div class="left">
+                        <div class="chart" id="bargraph">
+                            <script>
+                            var graphs = {{plot | safe}};
+                            Plotly.plot('bargraph',graphs,{});
+
+
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div style="clear:both"></div>
+
+<p>
+    <a href="{{ url_for('func') }}">Back to main menu</a>
+</p>
+{% endblock %}
 </body>
 </html>

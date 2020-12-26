@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm, Form
 from wtforms.validators import DataRequired, ValidationError
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import StringField, SubmitField, SubmitField, BooleanField, StringField, \
-    PasswordField, validators, IntegerField
+    PasswordField, validators, IntegerField, FloatField
 
 
 def num_validator(form, field):
@@ -14,7 +14,7 @@ class GB_Form(Form):
     n_estimators = IntegerField('n_estimators',
         [validators.DataRequired(), num_validator])
 
-    learning_rate = IntegerField('learning_rate',
+    learning_rate = FloatField('learning_rate',
         [validators.DataRequired(), num_validator])
 
     max_depth = IntegerField('max_depth',
@@ -26,7 +26,7 @@ class GB_Form(Form):
     trees_parameters = StringField('trees_parameters')
 
     train_dataset = FileField('Choose the file for training',
-                              validators=[#FileRequired('No File'),
+                              validators=[FileRequired('No File'),
                                           FileAllowed(['csv'], 'CSV only!')])
 
     submit = SubmitField('Create and train')
@@ -46,7 +46,14 @@ class RF_Form(Form):
     trees_parameters = StringField('trees_parameters')
 
     train_dataset = FileField('Choose the file for training',
-                              validators=[#FileRequired('No File'),
+                              validators=[FileRequired('No File'),
                                           FileAllowed(['csv'], 'CSV only!')])
 
     submit = SubmitField('Create and train')
+
+class PredictForm(Form):
+    predict_dataset = FileField('Choose the file for making predict',
+                              validators=[FileRequired('No File'),
+                                          FileAllowed(['csv'], 'CSV only!')])
+
+    prdict = SubmitField('Predict')
