@@ -26,6 +26,14 @@ class RandomForestMSE:
         self.feature_subsample_size = feature_subsample_size
         self.trees_parameters = trees_parameters
 
+    def params_dict(self):
+        ans = {"n_estimators": self.n_estimators,
+               "max_depth": self.max_depth,
+               "feature_subsample_size": self.feature_subsample_size,
+               "trees_parameters": self.trees_parameters
+               }
+        return ans
+
     def fit(self, X, y, verbose=False, X_val=None, y_val=None):
         """
         X : numpy ndarray
@@ -102,7 +110,16 @@ class GradientBoostingMSE:
         self.trees_parameters = trees_parameters
         self.history = None
 
-    def fit(self, X, y):
+    def params_dict(self):
+        ans = {"n_estimators": self.n_estimators,
+               "learning_rate": self.learning_rate,
+               "max_depth": self.max_depth,
+               "feature_subsample_size": self.feature_subsample_size,
+               "trees_parameters": self.trees_parameters
+               }
+        return ans
+
+    def fit(self, X, y, verbose=False, X_val=None, y_val=None):
         """
         X : numpy ndarray
             Array of size n_objects, n_features
@@ -121,6 +138,9 @@ class GradientBoostingMSE:
         self.trees_ensemble = []
         self.samples = []
 
+        x_res = []
+        y_res = []
+
         for i in range(self.n_estimators):
             algo = DecisionTreeRegressor(max_features=self.feature_subsample_size,
                                          max_depth=self.max_depth,
@@ -135,6 +155,15 @@ class GradientBoostingMSE:
             self.coefs.append(c * self.learning_rate)
             self.trees_ensemble.append(algo)
             prev_res[sample] += c * self.learning_rate * target
+
+            if verbose:
+                x_res.append(i)
+                pred = self.predict(X_val)
+
+                y_res.append(rmse(y_val, pred))
+
+        if verbose:
+            return x_res, y_res
 
     def predict(self, X, y=None, versbose=False):
         """
