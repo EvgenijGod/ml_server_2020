@@ -27,6 +27,7 @@
 .graph {
   width: 10%;
 }
+
     </style>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
@@ -50,10 +51,16 @@
                         {% endfor %}
                     </select>
                 </div>
-                <button type="submit" class="btn btn-default">Go</button>
+                <button type="submit" class="btn btn-default">Select</button>
             </div>
         </form>
-        <h1> {{chosen}}</h1>
+        {% if chosen %}
+        <h3> Observing {{chosen}} model </h3>
+        {% else %}
+        <h3>Waiting...</h3>
+        {% endif %}
+
+
         <hr>
         {{ wtf.quick_form(form) }}
         <hr>
@@ -70,12 +77,15 @@
             {% endfor %}
             </p>
         </div>
-
-        <p>MSE after each iteration:</p>
         <div class="container">
             <div class="row">
                 <div class="col-xs-3">
-                    <label> MSE of algo after each iteration.</label>
+                    {% if chosen %}
+                    <center><label> MSE of algo after each iteration:</label></center>
+                    {% else %}
+                    <h3>Waiting...</h3>
+                    {% endif %}
+
                 </div>
                 <div class="graph-container">
                     <div class="left">
@@ -85,12 +95,11 @@
                             Plotly.plot('bargraph',graphs,{});
 
 
+
                             </script>
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
@@ -98,7 +107,7 @@
 <div style="clear:both"></div>
 
 <p>
-    <a href="{{ url_for('func') }}">Back to main menu</a>
+    <a href="{{ url_for('func') }}">Back to main page</a>
 </p>
 {% endblock %}
 </body>
