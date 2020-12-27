@@ -30,7 +30,7 @@ class RandomForestMSE:
         ans = {"n_estimators": self.n_estimators,
                "max_depth": self.max_depth,
                "feature_subsample_size": self.feature_subsample_size,
-               "trees_parameters": self.trees_parameters
+               #"trees_parameters": self.trees_parameters
                }
         return ans
 
@@ -115,7 +115,7 @@ class GradientBoostingMSE:
                "learning_rate": self.learning_rate,
                "max_depth": self.max_depth,
                "feature_subsample_size": self.feature_subsample_size,
-               "trees_parameters": self.trees_parameters
+               #"trees_parameters": self.trees_parameters
                }
         return ans
 
