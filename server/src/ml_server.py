@@ -6,7 +6,7 @@ import plotly.graph_objs as go
 from collections import namedtuple
 from flask_wtf import FlaskForm, Form
 from flask_bootstrap import Bootstrap
-from flask import Flask, request, url_for
+from flask import Flask, request, url_for, send_file
 from flask import render_template, redirect
 import numpy as np
 import pandas as pd
@@ -153,12 +153,9 @@ def goto_RF_page():
     except Exception as exc:
         app.logger.info('Exception: {0}'.format(exc))
 
-
-# storage.model_dict['kekudsugysfsf'] = 'abac'
-# storage.model_dict['lol'] = 'kykarek'
-# storage.model_dict['lolka'] = 'kykarek'
 chosen_model_name = ''
 bar = None
+name = '!'
 
 
 @app.route('/models_page', methods=["GET", "POST"])
@@ -189,6 +186,7 @@ def goto_models_page():
             name = app.config['PREDICT_FOLDER'] + uploaded_file.filename[:-4] + '_predict.csv'
             pd.DataFrame(pred).to_csv(name, index=False)
             os.chmod(name, 0o666)
+            send_file(name, as_attachment=True)
             os.remove(app.config['TMP_FOLDER'] + uploaded_file.filename)
 
         return render_template('models_page.html',
