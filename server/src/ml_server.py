@@ -174,7 +174,7 @@ def goto_models_page():
         # x = np.random.randint(0, 10, 10)
         # y = np.random.randint(0, 10, 10)
         # bar = create_plot(x, y)
-        if request.method == 'POST' and form.validate_on_submit():
+        if chosen_model_name != '' and request.method == 'POST' and form.validate_on_submit():
             model = storage.get_model_by_name(chosen_model_name)
             chosen_model_name = 'DONE'
             uploaded_file = request.files['predict_dataset']
